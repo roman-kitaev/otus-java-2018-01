@@ -33,16 +33,72 @@ public class Main {
         array = new Object[size];
         for (int i = 0; i < size; i++) {
             array[i] = new Object();
-            //array[i] = new String(""); //String pool
-            //array[i] = new String(new char[0]); //without String pool
-            //array[i] = new MyClass();
-            //array[i] = new Object[0];
-            //array[i] = new ArrayList<Object>(0);
-            //array[i] = new TreeSet<Object>();
-            //array[i] = new HashMap<Object, Object>();
         }
         memAfter = getMem();
         System.out.println("Object size: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new String(""); //String pool
+        }
+        memAfter = getMem();
+        System.out.println("String with pool: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new String(new char[0]); //without String pool
+        }
+        memAfter = getMem();
+        System.out.println("String without pool usage: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new MyClass();
+        }
+        memAfter = getMem();
+        System.out.println("MyClass object size: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new Object[0];
+        }
+        memAfter = getMem();
+        System.out.println("Small array size: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new ArrayList<Object>(0);
+        }
+        memAfter = getMem();
+        System.out.println("ArrayList without elements size: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new TreeSet<Object>();
+        }
+        memAfter = getMem();
+        System.out.println("TreeSet without elements size: " + (memAfter - memBefore)/size);
+        System.out.println("Created " + size + " objects.\n");
+
+        memBefore = getMem();
+        array = new Object[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = new HashMap<Object, Object>();
+        }
+        memAfter = getMem();
+        System.out.println("HashMap without elements size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         /*size = 2_000_000;
