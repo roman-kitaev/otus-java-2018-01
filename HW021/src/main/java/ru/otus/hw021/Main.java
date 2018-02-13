@@ -13,8 +13,6 @@ import java.util.*;
  * <p>
  * jconsole, connect to pid
  */
-//asd asd asd
-    //more asd
 
 @SuppressWarnings({"RedundantStringConstructorCall", "InfiniteLoopStatement"})
 public class Main {
