@@ -101,6 +101,16 @@ public class Main {
         System.out.println("HashMap without elements size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
+        //to rescue the experiment from GC
+        array_2[0] = 1;
+        array_3[0] = 1;
+        array_4[0] = 1;
+        array_5[0] = 1;
+        array_6[0] = 1;
+        array_7[0] = 1;
+        array_8[0] = 1;
+        array_9[0] = 1;
+
         /*size = 2_000_000;
         Collection collection;
         memBefore = getMem();
