@@ -19,7 +19,7 @@ public class Main {
     public static void main(String... args) throws InterruptedException {
         System.out.println("pid: " + ManagementFactory.getRuntimeMXBean().getName());
         long memBefore, memAfter;
-        int size = 2_00_0_000;
+        int size = 20_000_000;
 
         System.out.println("Starting the measurements: \n");
 
@@ -30,79 +30,86 @@ public class Main {
         System.out.println("New array of size: " + array.length + " created\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_2 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new Object();
+            array_2[i] = new Object();
         }
         memAfter = getMem();
         System.out.println("Object size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_3 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new String(""); //String pool
+            array_3[i] = new String(""); //String pool
         }
         memAfter = getMem();
         System.out.println("String with pool: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_4 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new String(new char[0]); //without String pool
+            array_4[i] = new String(new char[0]); //without String pool
         }
         memAfter = getMem();
         System.out.println("String without pool usage: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_5 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new MyClass();
+            array_5[i] = new MyClass();
         }
         memAfter = getMem();
         System.out.println("MyClass object size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_6 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new Object[0];
+            array_6[i] = new Object[0];
         }
         memAfter = getMem();
         System.out.println("Small array size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_7 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new ArrayList<Object>(0);
+            array_7[i] = new ArrayList<Object>(0);
         }
         memAfter = getMem();
         System.out.println("ArrayList without elements size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_8 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new TreeSet<Object>();
+            array_8[i] = new TreeSet<Object>();
         }
         memAfter = getMem();
         System.out.println("TreeSet without elements size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         memBefore = getMem();
-        array = new Object[size];
+        Object[] array_9 = new Object[size];
         for (int i = 0; i < size; i++) {
-            array[i] = new HashMap<Object, Object>();
+            array_9[i] = new HashMap<Object, Object>();
         }
         memAfter = getMem();
         System.out.println("HashMap without elements size: " + (memAfter - memBefore)/size);
         System.out.println("Created " + size + " objects.\n");
 
         //to rescue the experiment from GC
-        array[0] = 1;
+        array_2[0] = 1;
+        array_3[0] = 1;
+        array_4[0] = 1;
+        array_5[0] = 1;
+        array_6[0] = 1;
+        array_7[0] = 1;
+        array_8[0] = 1;
+        array_9[0] = 1;
 
         /*size = 2_000_000;
         Collection collection;
