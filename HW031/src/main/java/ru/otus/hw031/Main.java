@@ -41,6 +41,9 @@ public class Main {
             System.out.print("-=" + iter.next() + "=-");
         }
         System.out.println();
+        System.out.println("Collections.addAll (8, 9, 10): ");
+        Collections.addAll(mySet, new MyClass(8, false, "text8"), new MyClass(9, false, "text9"), new MyClass(10, false, "text10"));
+        System.out.println(mySet);
         System.out.println("Clear:");
         mySet.clear();
         System.out.println(mySet);
