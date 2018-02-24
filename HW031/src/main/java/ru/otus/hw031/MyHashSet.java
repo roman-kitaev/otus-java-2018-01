@@ -115,58 +115,17 @@ public class MyHashSet<E> implements Set<E>{
         return builder.toString();
     }
     public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            private ListIterator<E> iter = null; //iterator for elements in lists (buckets)
-            private Integer currBucket; //current non-null bucket
-            {
-                currBucket = getNextBucket(0);
-                if(currBucket != null) iter = table[currBucket].listIterator();
-            }
-
-            @Override
-            public boolean hasNext() {
-                if(iter == null) return false;
-                //if there is no elements in current bucket and there are no filled buckets
-                //in the table
-                if(!iter.hasNext() && getNextBucket(currBucket + 1) == null) {
-                    return false;
-                }
-                return true;
-            }
-            @Override
-            public E next() {
-                try {
-                    return iter.next();
-                } catch (NullPointerException e) { //in case iter == null
-                    throw new NoSuchElementException(); //to be like a standard HashSet
-                } catch (NoSuchElementException e) { //in case current bucket is empty
-                    currBucket = getNextBucket(currBucket + 1); //searching fot the next bucket
-                    if(currBucket != null) { //go to the next bucket
-                        iter = table[currBucket].listIterator();
-                        return next(); //next again in the new bucket
-                    } else throw e; //if there is no any filled bucket at all
-                }
-            }
-            //returns number of the next filled bucket (from startPos):
-            private Integer getNextBucket(int startPos) {
-                for(int i = startPos; i < capacity; i++) {
-                    if(table[i] != null) return i;
-                }
-                return null;
-            }
-        };
+        return new MyIterator<E>(table, capacity);
     }
     public void clear() {
         table = new LinkedList[capacity];
         currentVolume = 0;
     }
-    public <T> T[] toArray(T[] a) {
-        return null;
-    }
+    public <T> T[] toArray(T[] a) { throw new UnsupportedOperationException(); }
     public boolean retainAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
     public boolean removeAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 }
