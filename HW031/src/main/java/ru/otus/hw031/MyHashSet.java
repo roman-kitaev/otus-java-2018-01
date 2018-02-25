@@ -6,7 +6,7 @@ import java.util.*;
  * Created by rel on 17.02.2018.
  */
 public class MyHashSet<E> implements Set<E>{
-    private float h = 0.75f; //load factor
+    private final static float h = 0.75f; //load factor
     private int capacity = 10; //size of the hash table
     private int currentVolume = 0; //how many elements we have now
     private List<E>[] table = new LinkedList[capacity];
