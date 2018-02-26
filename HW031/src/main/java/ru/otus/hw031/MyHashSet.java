@@ -6,13 +6,13 @@ import java.util.*;
  * Created by rel on 17.02.2018.
  */
 public class MyHashSet<E> implements Set<E>{
-    private final static float h = 0.75f; //load factor
+    private final static float H = 0.75f; //load factor
     private int capacity = 10; //size of the hash table
     private int currentVolume = 0; //how many elements we have now
     private List<E>[] table = new LinkedList[capacity];
     private boolean needToResize() {
         float currentLoadFactor = (float)currentVolume / (float)capacity;
-        if(currentLoadFactor > h) {
+        if(currentLoadFactor > H) {
             return true;
         }
         return false;
@@ -115,11 +115,51 @@ public class MyHashSet<E> implements Set<E>{
         return builder.toString();
     }
     public Iterator<E> iterator() {
-        return new MyIterator<E>(table, capacity);
+        return new MyIterator();
     }
     public void clear() {
         table = new LinkedList[capacity];
         currentVolume = 0;
+    }
+    class MyIterator implements Iterator<E> {
+        private ListIterator<E> iter = null; //iterator for elements in lists (buckets)
+        private Integer currBucket; //current non-null bucket
+        public MyIterator()
+        {
+            currBucket = getNextBucket(0);
+            if(currBucket != null) iter = table[currBucket].listIterator();
+        }
+        @Override
+        public boolean hasNext() {
+            if(iter == null) return false;
+            //if there is no elements in current bucket and there are no filled buckets
+            //in the table
+            if(!iter.hasNext() && getNextBucket(currBucket + 1) == null) {
+                return false;
+            }
+            return true;
+        }
+        @Override
+        public E next() {
+            try {
+                return iter.next();
+            } catch (NullPointerException e) { //in case iter == null
+                throw new NoSuchElementException(); //to be like a standard HashSet
+            } catch (NoSuchElementException e) { //in case current bucket is empty
+                currBucket = getNextBucket(currBucket + 1); //searching fot the next bucket
+                if(currBucket != null) { //go to the next bucket
+                    iter = table[currBucket].listIterator();
+                    return next(); //next again in the new bucket
+                } else throw e; //if there is no any filled bucket at all
+            }
+        }
+        //returns number of the next filled bucket (from startPos):
+        private Integer getNextBucket(int startPos) {
+            for(int i = startPos; i < capacity; i++) {
+                if(table[i] != null) return i;
+            }
+            return null;
+        }
     }
     public <T> T[] toArray(T[] a) { throw new UnsupportedOperationException(); }
     public boolean retainAll(Collection<?> c) {
