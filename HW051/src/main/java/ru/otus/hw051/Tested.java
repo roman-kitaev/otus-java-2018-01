@@ -11,6 +11,10 @@ public class Tested {
     public void a() {
         System.out.println("I`m a BEFORE from Tested!");
     }
+    /*@Before
+    public void a2() {
+        System.out.println("I`m a BEFORE #2 from Tested!");
+    }*/
     @Test
     public void b1() {
         System.out.println("I`m a TEST #1 from Tested");
