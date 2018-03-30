@@ -1,8 +1,13 @@
-package ru.otus.hw071;
+package ru.otus.hw071.atm;
+
+import ru.otus.hw071.observ.Observable;
 
 import java.util.*;
 
 public class GreedyAlgorithmAtm extends AbstractAtm {
+    public GreedyAlgorithmAtm(Observable observable) {
+        super(observable);
+    }
     @Override
     public Map<Integer, Integer> getSum(int sumToGet) {
         Map<Integer, Integer> currentSumMap = new TreeMap<Integer, Integer>(currencyAmount);
@@ -10,11 +15,11 @@ public class GreedyAlgorithmAtm extends AbstractAtm {
         ListIterator<Integer> iter = list.listIterator(list.size());
 
         while(iter.hasPrevious()) {
-            Integer currCoinToCheck = iter.previous();
-            while(currentSumMap.get(currCoinToCheck) > 0 && sumToGet >= currCoinToCheck) {
-                sumToGet -= currCoinToCheck;
-                int tmp = currentSumMap.get(currCoinToCheck);
-                currentSumMap.put(currCoinToCheck, (tmp - 1));
+            Integer currBankNoteToCheck = iter.previous();
+            while(currentSumMap.get(currBankNoteToCheck) > 0 && sumToGet >= currBankNoteToCheck) {
+                sumToGet -= currBankNoteToCheck;
+                int tmp = currentSumMap.get(currBankNoteToCheck);
+                currentSumMap.put(currBankNoteToCheck, (tmp - 1));
             }
             if(sumToGet == 0) break;
         }
@@ -24,10 +29,10 @@ public class GreedyAlgorithmAtm extends AbstractAtm {
             result = new TreeMap<Integer, Integer>();
             iter = list.listIterator(list.size());
             while(iter.hasPrevious()) {
-                int currCoin = iter.previous();
-                int difference = currencyAmount.get(currCoin) - currentSumMap.get(currCoin);
+                int currBankNote = iter.previous();
+                int difference = currencyAmount.get(currBankNote) - currentSumMap.get(currBankNote);
                 if(difference > 0) {
-                    result.put(currCoin, difference);
+                    result.put(currBankNote, difference);
                 }
             }
             currencyAmount = currentSumMap;

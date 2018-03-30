@@ -1,10 +1,13 @@
-package ru.otus.hw071;
+package ru.otus.hw071.atm;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import ru.otus.hw071.observ.Observable;
+
+import java.util.*;
 
 public class DPAlgorithmAtm extends AbstractAtm{
+    public DPAlgorithmAtm(Observable observable) {
+        super(observable);
+    }
     @Override
     public Map<Integer, Integer> getSum(int sumToGet) {
         Integer[] mass = new Integer[sumToGet + 1];
@@ -21,28 +24,28 @@ public class DPAlgorithmAtm extends AbstractAtm{
             Integer min = null;
             Map<Integer, Integer> mapForBackMass = null;
             for(Map.Entry<Integer, Integer> entry : currencyAmount.entrySet()) {
-                if(entry.getValue() > 0 && (i - entry.getKey()) > 0) { //which coin we can use
-                    int coinToCheck = entry.getKey();
-                    int neighborToCheck = i - coinToCheck;
+                if(entry.getValue() > 0 && (i - entry.getKey()) > 0) { //which bankNote we can use
+                    int bankNoteToCheck = entry.getKey();
+                    int neighborToCheck = i - bankNoteToCheck;
                     if(backMass[neighborToCheck] == null) {
                         continue;
                     }
-                    Integer neighborAlreadyHasCoinsToCheck = backMass[neighborToCheck].get(coinToCheck);
-                    int weHaveThisCoinInAtm = currencyAmount.get(coinToCheck);
-                    if(neighborAlreadyHasCoinsToCheck == null) {
-                        if(weHaveThisCoinInAtm > 0) {
+                    Integer neighborAlreadyHasBankNotesToCheck = backMass[neighborToCheck].get(bankNoteToCheck);
+                    int weHaveThisBankNoteInAtm = currencyAmount.get(bankNoteToCheck);
+                    if(neighborAlreadyHasBankNotesToCheck == null) {
+                        if(weHaveThisBankNoteInAtm > 0) {
                             if(min == null || min > mass[neighborToCheck] + 1) {
                                 min = mass[neighborToCheck] + 1;
                                 mapForBackMass = new TreeMap<Integer, Integer>(backMass[neighborToCheck]);
-                                mapForBackMass.put(coinToCheck, 1);
+                                mapForBackMass.put(bankNoteToCheck, 1);
                             }
                         }
                         else continue;
                     } else {
-                        if(weHaveThisCoinInAtm >= neighborAlreadyHasCoinsToCheck + 1) {
+                        if(weHaveThisBankNoteInAtm >= neighborAlreadyHasBankNotesToCheck + 1) {
                             min = mass[neighborToCheck] + 1;
                             mapForBackMass = new TreeMap<Integer, Integer>(backMass[neighborToCheck]);
-                            mapForBackMass.put(coinToCheck, neighborAlreadyHasCoinsToCheck + 1);
+                            mapForBackMass.put(bankNoteToCheck, neighborAlreadyHasBankNotesToCheck + 1);
                         }
                         else continue;
                     }
