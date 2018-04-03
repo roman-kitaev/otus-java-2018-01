@@ -1,12 +1,15 @@
-package ru.otus.hw061;
+package ru.otus.hw061.algorithm;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class DPAlgorithmAtm extends AbstractAtm{
+/**
+ * Created by rel on 02.04.2018.
+ */
+public class DynamicProgramming implements Algorithm {
     @Override
-    public Map<Integer, Integer> getSum(int sumToGet) {
+    public Map<Integer, Integer> getSum(int sumToGet, Map<Integer, Integer> currencyAmount) {
         Integer[] mass = new Integer[sumToGet + 1];
         Map<Integer, Integer>[] backMass = new TreeMap[sumToGet + 1];
 

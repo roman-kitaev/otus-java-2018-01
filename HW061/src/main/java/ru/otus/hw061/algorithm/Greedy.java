@@ -1,10 +1,13 @@
-package ru.otus.hw061;
+package ru.otus.hw061.algorithm;
 
 import java.util.*;
 
-public class GreedyAlgorithmAtm extends AbstractAtm {
+/**
+ * Created by rel on 02.04.2018.
+ */
+public class Greedy implements Algorithm {
     @Override
-    public Map<Integer, Integer> getSum(int sumToGet) {
+    public Map<Integer, Integer> getSum(int sumToGet, Map<Integer, Integer> currencyAmount) {
         Map<Integer, Integer> currentSumMap = new TreeMap<Integer, Integer>(currencyAmount);
         List<Integer> list = new ArrayList<Integer>(currentSumMap.keySet());
         ListIterator<Integer> iter = list.listIterator(list.size());
@@ -28,9 +31,9 @@ public class GreedyAlgorithmAtm extends AbstractAtm {
                 int difference = currencyAmount.get(currCoin) - currentSumMap.get(currCoin);
                 if(difference > 0) {
                     result.put(currCoin, difference);
+                    currencyAmount.put(currCoin, currentSumMap.get(currCoin));
                 }
             }
-            currencyAmount = currentSumMap;
         }
         return result;
     }
