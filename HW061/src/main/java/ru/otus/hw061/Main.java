@@ -2,6 +2,7 @@ package ru.otus.hw061;
 
 import ru.otus.hw061.algorithm.DynamicProgramming;
 import ru.otus.hw061.algorithm.Greedy;
+import ru.otus.hw061.algorithm.Nominal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +14,14 @@ public class Main {
     public static void main(String[] args) {
         ATM atm = new ATM(new Greedy());
 
-        atm.defaultLoad(3);
+        atm.defaultLoad(5);
 
         System.out.println("Welcome to ATM!");
-        System.out.println("I`m working with: 1 2 5 10 50 100 200 500 1000 2000 5000 russian banknotes!");
+        System.out.print("I`m working with: ");
+        for(Nominal nominal : Nominal.values()) {
+            System.out.print(nominal.getValue() + " ");
+        }
+        System.out.println("russian banknotes!");
         System.out.println("Please type :\n" +
         "-put &note    to put a banknote to me\n" +
         "-wd &sum      to withdraw a definite sum\n" +
@@ -43,12 +48,12 @@ public class Main {
                 if(splitted[0].equals("-wd")) {
                     Integer sum = Integer.parseInt(splitted[1]);
                     System.out.println("I`m trying to withdraw : " + sum + " RUB");
-                    Map<Integer, Integer> result = atm.withDraw(sum);
+                    Map<Nominal, Integer> result = atm.withDraw(sum);
                     if(result != null) {
                         System.out.println("Please take it : ");
-                        result.forEach(new BiConsumer<Integer, Integer>() {
-                            public void accept(Integer integer, Integer integer2) {
-                                System.out.println(integer + " x" + integer2);
+                        result.forEach(new BiConsumer<Nominal, Integer>() {
+                            public void accept(Nominal nominal, Integer integer2) {
+                                System.out.println(nominal + " x" + integer2);
                             }
                         });
                     } else {
