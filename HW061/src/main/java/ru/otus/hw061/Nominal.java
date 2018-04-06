@@ -1,4 +1,4 @@
-package ru.otus.hw061.algorithm;
+package ru.otus.hw061;
 
 /**
  * Created by rel on 06.04.2018.

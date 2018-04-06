@@ -1,5 +1,7 @@
 package ru.otus.hw061.algorithm;
 
+import ru.otus.hw061.Nominal;
+
 import java.util.Map;
 
 /**

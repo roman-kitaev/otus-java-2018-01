@@ -1,8 +1,6 @@
 package ru.otus.hw061;
 
-import ru.otus.hw061.algorithm.DynamicProgramming;
 import ru.otus.hw061.algorithm.Greedy;
-import ru.otus.hw061.algorithm.Nominal;
 
 import java.io.BufferedReader;
 import java.io.IOException;

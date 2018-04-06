@@ -1,7 +1,6 @@
 package ru.otus.hw061;
 
 import ru.otus.hw061.algorithm.Algorithm;
-import ru.otus.hw061.algorithm.Nominal;
 
 import java.util.Map;
 import java.util.TreeMap;
