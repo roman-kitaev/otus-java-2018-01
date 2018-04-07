@@ -1,8 +1,8 @@
 package ru.otus.hw071;
 
-import ru.otus.hw071.atm.AbstractAtm;
-import ru.otus.hw071.atm.DPAlgorithmAtm;
-import ru.otus.hw071.atm.GreedyAlgorithmAtm;
+import ru.otus.hw071.atm.ATM;
+import ru.otus.hw071.atm.DynamicProgramming;
+import ru.otus.hw071.atm.Greedy;
 import ru.otus.hw071.observ.Observable;
 
 /**
@@ -11,19 +11,19 @@ import ru.otus.hw071.observ.Observable;
 public class Main {
     public static void main(String[] args) {
         Observable department = new ATMDepartment();
-        AbstractAtm atm1 = new DPAlgorithmAtm(department);
-        AbstractAtm atm2 = new GreedyAlgorithmAtm(department);
-        AbstractAtm atm3 = new DPAlgorithmAtm(department);
-        new GreedyAlgorithmAtm(department);
-        new DPAlgorithmAtm(department);
-        new GreedyAlgorithmAtm(department);
+        ATM atm1 = new ATM(new Greedy());
+        ATM atm2 = new ATM(new Greedy());
+
+        department.registerObserver(atm1);
+        department.registerObserver(atm2);
+        department.registerObserver(new ATM(new DynamicProgramming()));
+        department.registerObserver(new ATM(new DynamicProgramming()));
 
         System.out.println("Current TOTAL balance = " + department.getBalances());
         System.out.println("------------------------------------");
 
-        atm1.putSum(5000);
-        atm2.putSum(5000);
-        atm3.putSum(5000);
+        atm1.putSum(100);
+        atm2.putSum(100);
 
         System.out.println("Current TOTAL balance = " + department.getBalances());
         System.out.println("------------------------------------");
