@@ -13,12 +13,12 @@ public class ATM implements Observer{
     private static Random rand = new Random(47);
     private static int counter = 0;
     private final int id = counter++;
-    private static final int maxValueForFillingByRandom = 15;
+    private static final int MAXVALUEFORFILLINGBYRANDOM = 15;
     private Map<Nominal, Integer> currencyAmount = new TreeMap<Nominal, Integer>();
     public ATM(Algorithm algorithm) {
         this.algorithm = algorithm;
         for(Nominal nominal : Nominal.values()) {
-            currencyAmount.put(nominal, rand.nextInt(maxValueForFillingByRandom));
+            currencyAmount.put(nominal, rand.nextInt(MAXVALUEFORFILLINGBYRANDOM));
         }
         memento = new AtmMemento(currencyAmount);
     }
