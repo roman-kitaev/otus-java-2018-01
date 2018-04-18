@@ -1,8 +1,11 @@
 package ru.otus.hw091;
 
+import ru.otus.hw091.base.ItemDataSet;
 import ru.otus.hw091.base.MyDBService;
 import ru.otus.hw091.base.UserDataSet;
 import ru.otus.hw091.objectwriter.MyDBServiceObjectWriter;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by rel on 07.04.2018.
@@ -10,19 +13,17 @@ import ru.otus.hw091.objectwriter.MyDBServiceObjectWriter;
 public class Main {
     public static void main(String[] args) throws Exception{
         try (MyDBService dbService = new MyDBServiceObjectWriter()) {
-            dbService.prepareTables();
-            dbService.addUsers("Vasiliy", "Ivan", "Petr");
-            dbService.save(new UserDataSet(-1, "Ignat", 54));
-            System.out.println("----->All names:");
-            System.out.println(dbService.getAllNames());
-            System.out.println("----->All users:");
-            for(UserDataSet user : dbService.getAllUsers()) {
-                System.out.println(user);
-            }
-            int id = 4;
-            Class<?> clazz = UserDataSet.class;
-            System.out.println("----->" + clazz.getSimpleName() + " with id = " + id + ":");
-            System.out.println(dbService.load(id, UserDataSet.class));
+            UserDataSet set1 = new UserDataSet();
+            set1.setName("Ivan"); set1.setAge(33); set1.setAddress("Russia"); set1.setNumberOfChildren(2);
+
+            ItemDataSet set2 = new ItemDataSet();
+            set2.setName("Computer"); set2.setPrice(30000); set2.setWeight(7);
+
+            dbService.save(set1);
+            dbService.save(set2);
+
+            System.out.println(dbService.load(1, UserDataSet.class));
+            System.out.println(dbService.load(1, ItemDataSet.class));
         }
     }
 }

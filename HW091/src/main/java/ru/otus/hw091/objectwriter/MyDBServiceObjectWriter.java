@@ -7,14 +7,14 @@ import ru.otus.hw091.executors.DataSetExecutor;
 import ru.otus.hw091.executors.LogExecutor;
 import ru.otus.hw091.executors.TExecutor;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by rel on 12.04.2018.
@@ -28,6 +28,7 @@ public class MyDBServiceObjectWriter implements MyDBService {
     private static final String GET_ALL_NAMES = "select name from user";
     private static final String GET_ALL_USERS = "select * from user";
     private static final String SELECT_DATASET = "select name, age from user where id=%s";
+    //private Map<String, List<Field>> scheme = new HashMap<>();
     public MyDBServiceObjectWriter() {
         connection = ru.otus.hw091.objectwriter.ConnectionHelper.getConnection();
     }
@@ -49,6 +50,29 @@ public class MyDBServiceObjectWriter implements MyDBService {
     public void prepareTables() throws SQLException {
         LogExecutor exec = new LogExecutor(getConnection());
         exec.execUpdate(CREATE_TABLE_USER);
+        System.out.println("Table created");
+    }
+    private <T extends DataSet> void prepareTables(Class<T> clazz) throws SQLException{
+        StringBuilder query = new StringBuilder();
+        query.append("create table if not exists ");
+        query.append(clazz.getSimpleName().toLowerCase());
+        query.append(" (id bigint auto_increment, ");
+        for(Field field : clazz.getDeclaredFields()) {
+            query.append(field.getName());
+            switch (field.getType().getSimpleName()) {
+                case "String" :
+                    query.append(" varchar(256)");
+                    break;
+                case "int" :
+                    query.append(" int(5)");
+                    break;
+                //...etc.
+            }
+            query.append(" ,");
+        }
+        query.append(" primary key (id));");
+        LogExecutor exec = new LogExecutor(getConnection());
+        exec.execUpdate(query.toString());
         System.out.println("Table created");
     }
 
@@ -101,7 +125,7 @@ public class MyDBServiceObjectWriter implements MyDBService {
                     int id = resultSet.getInt("id");
                     String name = resultSet.getString("name");
                     int age = resultSet.getInt("age");
-                    list.add(new UserDataSet(id, name, age));
+                    list.add(new UserDataSet(/* constructor */)); //there are no constructors any more(
                 }
                 return list;
             }
@@ -127,43 +151,82 @@ public class MyDBServiceObjectWriter implements MyDBService {
 
     @Override
     public <T extends DataSet> void save(T user) throws SQLException {
-        try {
-            Field fieldName = user.getClass().getDeclaredField("name");
-            fieldName.setAccessible(true);
-            String name = (String) fieldName.get(user);
+        prepareTables(user.getClass());
 
-            Field fieldAge = user.getClass().getDeclaredField("age");
-            fieldAge.setAccessible(true);
-            int age = (int) fieldAge.get(user);
-
-            DataSetExecutor exec = new DataSetExecutor(getConnection());
-
-            int rows = exec.execUpdate(String.format(INSERT_USER, name, age));
-            System.out.println("User added. Rows changed: " + rows);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            System.out.println("Reflection exception");
+        StringBuilder query = new StringBuilder();
+        query.append("insert into " + user.getClass().getSimpleName().toLowerCase() + " (");
+        for(Field field : user.getClass().getDeclaredFields()) {
+            query.append(field.getName() + " ,");
         }
+        query.delete(query.length() - 2, query.length());
+        query.append(") values (");
+        try {
+            for(Field field : user.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object value = field.get(user);
+                switch (value.getClass().getSimpleName()) {
+                    case "String":
+                        query.append("'" + value + "'");
+                        break;
+                    case "Integer":
+                        query.append(value);
+                        break;
+                    //etc.
+                }
+                query.append(", ");
+            }
+        } catch (IllegalAccessException e) {
+        }
+        query.delete(query.length() - 2, query.length());
+        query.append(");");
+        DataSetExecutor exec = new DataSetExecutor(getConnection());
+        int rows = exec.execUpdate(query.toString());
     }
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) throws SQLException {
-        //Let`s suppose that our clazz has constructor (int id, String name, int age):
+        StringBuilder query = new StringBuilder();
+        query.append("select ");
+
+        for(Field field : clazz.getDeclaredFields()) {
+            query.append(field.getName() + " ,");
+        }
+        query.delete(query.length() - 2, query.length());
+        query.append(" from " + clazz.getSimpleName().toLowerCase() + " where id=" + id + ";" );
         DataSetExecutor exec = new DataSetExecutor(getConnection());
-        return exec.execQuery(String.format(SELECT_DATASET, id), new TResultHandler<T>() {
+        return exec.execQuery(query.toString(), new TResultHandler<T>() {
             @Override
             public T handle(ResultSet result) throws SQLException {
                 T obj = null;
                 result.next();
-                String name = result.getString("name");
-                int age = result.getInt("age");
                 try {
-                    Class[] params = {int.class, String.class, int.class};
-                    obj = clazz.getConstructor(params).newInstance((int)id, name, age);
+                    obj = clazz.getConstructor().newInstance();
+                    Method setId = clazz.getDeclaredMethod("setId", long.class);
+                    obj.setId(id);
+                    for(Field field : clazz.getDeclaredFields()) {
+                        String fieldName = field.getName();
+                        String methodName = "set" + capitalizeFirstLetter(fieldName);
+                        Method method = clazz.getDeclaredMethod(methodName, field.getType());
+                        switch (field.getType().getSimpleName()) {
+                            case "String" :
+                                method.invoke(obj, result.getString(fieldName));
+                                break;
+                            case "int" :
+                                method.invoke(obj, result.getInt(fieldName));
+                                break;
+                            //...etc.
+                        }
+                    }
                 } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    System.out.println("Reflection eception");
+                    System.out.println("Reflection exception");
                 }
                 return obj;
             }
         });
+    }
+    private static String capitalizeFirstLetter(String str) {
+        Character firstLetter = str.charAt(0);
+        firstLetter = Character.toUpperCase(firstLetter);
+        return firstLetter + str.substring(1, str.length());
     }
 }

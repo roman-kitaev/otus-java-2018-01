@@ -6,12 +6,12 @@ package ru.otus.hw091.base;
 public class UserDataSet extends DataSet {
     private String name;
     private int age;
+    private String address;
+    private int numberOfChildren;
 
-    public UserDataSet(int id, String name, int age) {
-        super(id);
-        this.age = age;
-        this.name = name;
-    }
+    public UserDataSet() {}
+
+    public String getAddress() { return address; }
 
     public String getName() {
         return name;
@@ -19,9 +19,27 @@ public class UserDataSet extends DataSet {
 
     public int getAge() { return age; }
 
-    public long getId() {
-        return id;
+    public int getNumberOfChildren() { return numberOfChildren; }
+
+    public long getId() { return id; }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
+
+    public void setNumberOfChildren(int numberOfChildren) {
+        this.numberOfChildren = numberOfChildren;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setId(long id) { this.id = id; }
 
     @Override
     public String toString() {
@@ -29,6 +47,8 @@ public class UserDataSet extends DataSet {
                 "id=" + id +
                 ", name=" + name +
                 ", age=" + age +
+                ", address=" + address +
+                ", number of children=" + numberOfChildren +
                 '}';
     }
 }
