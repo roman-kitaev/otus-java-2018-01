@@ -21,6 +21,10 @@ public interface MyDBService extends AutoCloseable {
 
     void deleteTables() throws SQLException;
 
+    <T extends DataSet> void addScheme (Class<T> clazz) throws SQLException;
+
+    <T extends DataSet> void addSchemes(Class<T>... clazzes) throws SQLException;
+
     <T extends DataSet> void save(T user) throws SQLException;
 
     <T extends DataSet> T load(long id, Class<T> clazz) throws SQLException;
