@@ -1,10 +1,12 @@
-package ru.otus.hw091.executors;
+package ru.otus.hw111.executors;
 
 /**
  * Created by rel on 14.04.2018.
  */
-import ru.otus.hw091.base.DataSet;
-import ru.otus.hw091.objectwriter.TResultHandler;
+
+
+import ru.otus.hw111.base.DataSet;
+import ru.otus.hw111.objectwriter.TResultHandler;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,9 +21,8 @@ public class DataSetExecutor extends LogExecutor {
         this.connection = connection;
     }
 
-    public int execUpdate(String update) throws SQLException {
+    public int execAdd(String update) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
-            //stmt.execute(update);
             stmt.executeUpdate(update, Statement.RETURN_GENERATED_KEYS);
 
             ResultSet rs = stmt.getGeneratedKeys();
@@ -29,8 +30,13 @@ public class DataSetExecutor extends LogExecutor {
             if (rs.next()){
                 n = rs.getInt(1);
             }
+            return n;
+        }
+    }
 
-            System.out.println("I`m going to add id: " + n);
+    public int execUpdate(String update) throws SQLException {
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(update);
             return stmt.getUpdateCount();
         }
     }
