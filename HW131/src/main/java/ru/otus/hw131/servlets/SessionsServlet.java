@@ -29,7 +29,7 @@ public class SessionsServlet extends HttpServlet {
     @Autowired
     private TemplateProcessor templateProcessor;
 
-    public SessionsServlet() throws SQLException{
+    public SessionsServlet() {
     }
 
     public void init() throws ServletException {
