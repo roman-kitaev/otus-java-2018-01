@@ -30,7 +30,7 @@ public class Main {
         context.addServlet(new ServletHolder(new LoginServlet()), "/");
 
         Server server = new Server(PORT);
-        server.setHandler(new HandlerList(/*resourceHandler, */context));
+        server.setHandler(context);
 
         server.start();
         //----------------------------------DB-------------------------------------------------
