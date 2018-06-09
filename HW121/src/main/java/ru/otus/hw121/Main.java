@@ -10,13 +10,14 @@ import ru.otus.hw121.base.MyDBService;
 import ru.otus.hw121.base.UserDataSet;
 import ru.otus.hw121.cacheengine.SoftRefCacheEngine;
 import ru.otus.hw121.objectwriter.MyDBServiceObjectWriter;
-import ru.otus.hw121.servlets.SessionsServlet;
+import ru.otus.hw121.servlets.AdminServlet;
+import ru.otus.hw121.servlets.LoginServlet;
 
 /**
  * Created by rel on 06.05.2018.
  */
 public class Main {
-    private final static int PORT = 8080;
+    private final static int PORT = 8070;
     private final static String PUBLIC_HTML = "public_html";
     public static void main(String[] args) throws Exception {
         SoftRefCacheEngine<DataSet> cacheEngine = new SoftRefCacheEngine<>(2);
@@ -25,10 +26,11 @@ public class Main {
         resourceHandler.setResourceBase(PUBLIC_HTML);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(new SessionsServlet(cacheEngine)), "/admin");
+        context.addServlet(new ServletHolder(new AdminServlet(cacheEngine)), "/admin");
+        context.addServlet(new ServletHolder(new LoginServlet()), "/");
 
         Server server = new Server(PORT);
-        server.setHandler(new HandlerList(resourceHandler, context));
+        server.setHandler(new HandlerList(/*resourceHandler, */context));
 
         server.start();
         //----------------------------------DB-------------------------------------------------
