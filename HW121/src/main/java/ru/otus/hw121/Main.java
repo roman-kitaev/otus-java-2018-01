@@ -1,7 +1,6 @@
 package ru.otus.hw121;
 
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -11,13 +10,14 @@ import ru.otus.hw121.base.UserDataSet;
 import ru.otus.hw121.cacheengine.SoftRefCacheEngine;
 import ru.otus.hw121.objectwriter.MyDBServiceObjectWriter;
 import ru.otus.hw121.servlets.AdminServlet;
+import ru.otus.hw121.servlets.HelloServlet;
 import ru.otus.hw121.servlets.LoginServlet;
 
 /**
  * Created by rel on 06.05.2018.
  */
 public class Main {
-    private final static int PORT = 8070;
+    private final static int PORT = 8080;
     private final static String PUBLIC_HTML = "public_html";
     public static void main(String[] args) throws Exception {
         SoftRefCacheEngine<DataSet> cacheEngine = new SoftRefCacheEngine<>(2);
@@ -27,7 +27,8 @@ public class Main {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new AdminServlet(cacheEngine)), "/admin");
-        context.addServlet(new ServletHolder(new LoginServlet()), "/");
+        context.addServlet(new ServletHolder(new LoginServlet()), "/login");
+        context.addServlet(new ServletHolder(new HelloServlet()), "/");
 
         Server server = new Server(PORT);
         server.setHandler(context);

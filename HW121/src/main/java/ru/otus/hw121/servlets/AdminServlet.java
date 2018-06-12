@@ -46,30 +46,6 @@ public class AdminServlet extends HttpServlet{
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
-        String login = request.getParameter("login");
-        String pass = request.getParameter("pass");
-
-        if (!login.equals("admin") || !pass.equals("admin")) {
-            response.setContentType("text/html;charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        HttpSession httpSession = request.getSession();
-        httpSession.setAttribute("user", login);
-
-        Map<String, Object> cacheVariables = fillWithCacheInfo();
-        cacheVariables.put("user", login);
-
-        response.setContentType("text/html;charset=utf-8");
-        String page = templateProcessor.getPage("admin.html", cacheVariables);
-        response.getWriter().println(page);
-        response.setStatus(HttpServletResponse.SC_OK);
-    }
-
     private Map<String, Object> fillWithCacheInfo() {
         Map<String, Object> map = new HashMap<>();
         map.put("hit", cacheEngine.getHitCount());
