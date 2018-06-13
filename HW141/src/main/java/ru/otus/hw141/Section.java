@@ -4,21 +4,21 @@ package ru.otus.hw141;
  * Created by rel on 10.06.2018.
  */
 public class Section {
-    private final Integer begin;
-    private final Integer end;
-    private Integer currentPos;
+    private final int begin;
+    private final int end;
+    private int currentPos;
 
-    public Section(Integer begin, Integer end) {
+    public Section(int begin, int end) {
         this.begin = begin;
         this.end = end;
         this.currentPos = begin;
     }
 
-    public Integer getBegin() {
+    public int getBegin() {
         return begin;
     }
 
-    public Integer getEnd() {
+    public int getEnd() {
         return end;
     }
 
