@@ -7,6 +7,8 @@ import java.util.Random;
  * Created by rel on 03.06.2018.
  */
 public class Main {
+    private final static int RANDOM_SEED = 5;
+
     public static void main(String[] args) {
         int arrayLength, threadsCount;
         if(args.length == 2) {
@@ -25,44 +27,56 @@ public class Main {
             System.out.println("Using default parameters: \narrayLength = " + arrayLength + "\nthreadsCount = " + threadsCount);
         }
 
-        /////////////////////////////////////////////////////////////////////
+        Long timeForThreads = sortViaThreads(arrayLength, threadsCount);
+        if(timeForThreads != null) {
+            System.out.println("The array has been sorted properly for " + timeForThreads + " milliseconds using " + threadsCount + " thread(s)!");
+        } else {
+            System.out.println("Please sort the array again!");
+        }
 
-        System.out.println("Preparing new array...");
+        Long timeForLibrary = sortViaLibrary(arrayLength);
+        if(timeForThreads != null) {
+            System.out.println("The array has been sorted properly for " + timeForLibrary + " milliseconds using one thread!");
+        } else {
+            System.out.println("Please sort the array again!");
+        }
+    }
+
+    private static Long sortViaThreads(int arrayLength, int threadsCount) {
         int[] mass = new int[arrayLength];
-        Random rand = new Random(5);
+        Random rand = new Random(RANDOM_SEED);
 
         for(int i = 0; i < mass.length; i++) {
             mass[i] = rand.nextInt();
         }
 
         long timeBefore = System.currentTimeMillis();
-        System.out.println("Sorting the array...");
         int[] result = SortIt.sort(mass, threadsCount);
         long timeAfter = System.currentTimeMillis();
 
         if(CheckIt.checkTheArray(result)) {
-            System.out.println("The array has been sorted properly for " + (timeAfter - timeBefore) + " milliseconds using " + threadsCount + " threads!");
+            return (timeAfter - timeBefore);
         } else {
-            System.out.println("Please sort the array again!");
+            return null;
         }
+    }
 
-        /////////////////////////////////////////////////////////////////////
-
-        mass = new int[arrayLength];
-        rand = new Random(5);
+    private static Long sortViaLibrary(int arrayLength) {
+        int[] mass = new int[arrayLength];
+        Random rand = new Random(RANDOM_SEED);
 
         for(int i = 0; i < mass.length; i++) {
             mass[i] = rand.nextInt();
         }
 
-        timeBefore = System.currentTimeMillis();
+        long timeBefore = System.currentTimeMillis();
         Arrays.sort(mass, 0, mass.length);
-        timeAfter = System.currentTimeMillis();
+        long timeAfter = System.currentTimeMillis();
 
         if(CheckIt.checkTheArray(mass)) {
-            System.out.println("The array has been sorted properly for " + (timeAfter - timeBefore) + " milliseconds using one thread!");
+            return (timeAfter - timeBefore);
         } else {
-            System.out.println("Please sort the array again!");
+            return null;
         }
     }
 }
