@@ -43,8 +43,6 @@ public class LoginServlet extends HttpServlet {
         if(httpSession.getAttribute("user") != null) {
             response.sendRedirect("/admin");
         } else {
-            TemplateProcessor templateProcessor = TemplateProcessor.instance();
-
             response.setContentType("text/html;charset=utf-8");
 
             Map<String, Object> variables = new HashMap<>();
