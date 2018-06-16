@@ -21,7 +21,7 @@ public class AdminServlet extends HttpServlet{
     private final TemplateProcessor templateProcessor;
 
     public AdminServlet(SoftRefCacheEngine<DataSet> cacheEngine) throws IOException{
-        templateProcessor = new TemplateProcessor();
+        templateProcessor = TemplateProcessor.instance();
         this.cacheEngine = cacheEngine;
     }
 

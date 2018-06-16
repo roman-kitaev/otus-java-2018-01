@@ -15,21 +15,24 @@ import java.util.Map;
  */
 public class TemplateProcessor {
     private static final String HTML_DIR = "tml";
+    private static TemplateProcessor instance = new TemplateProcessor();
 
     private final Configuration configuration;
 
-    public TemplateProcessor() throws IOException {
-        configuration = new Configuration(Configuration.VERSION_2_3_28);
-        configuration.setDirectoryForTemplateLoading(new File(HTML_DIR));
-        configuration.setDefaultEncoding("UTF-8");
+    private TemplateProcessor() {
+        configuration = new Configuration();
+    }
+
+    public static TemplateProcessor instance() {
+        return instance;
     }
 
     public String getPage(String filename, Map<String, Object> data) throws IOException {
         try (Writer stream = new StringWriter()) {
-            Template template = configuration.getTemplate(filename);
+            Template template = configuration.getTemplate(HTML_DIR + File.separator + filename);
             template.process(data, stream);
             return stream.toString();
-        } catch (TemplateException e) {
+        } catch (Exception e) {
             throw new IOException(e);
         }
     }
