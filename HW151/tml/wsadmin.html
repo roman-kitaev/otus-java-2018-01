@@ -1,0 +1,85 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin</title>
+    <script type="text/javascript">
+        var ws;
+
+        function init() {
+            ws = new WebSocket("ws://localhost:8080/wsadmin");
+            ws.onopen = function (event) {
+
+            }
+            ws.onmessage = function (event) {
+                var message = JSON.parse(event.data);
+                if(message.type == "hitmiss") {
+                    document.getElementById('hit').innerHTML = message.hit;
+                    document.getElementById('miss').innerHTML = message.miss;
+                    document.getElementById('size').innerHTML = message.size;
+                    document.getElementById('maxSize').innerHTML = message.maxSize;
+                }
+                if(message.type == "user") {
+                    document.getElementById('name').innerHTML = message.name;
+                    document.getElementById('age').innerHTML = message.age;
+                    document.getElementById('address').innerHTML = message.address;
+                    document.getElementById('numberOfChildren').innerHTML = message.numberOfChildren;
+                }
+                if(message.type == "nulluser") {
+                    document.getElementById('name').innerHTML = "there is no such user in the base";
+                    document.getElementById('age').innerHTML = "";
+                    document.getElementById('address').innerHTML = "";
+                    document.getElementById('numberOfChildren').innerHTML = "";
+                }
+            }
+            ws.onclose = function (event) {
+
+            }
+        };
+
+        function sendMessage() {
+            var messageField = document.getElementById("message");
+            if(isInteger(messageField.value)) {
+                ws.send(messageField.value);
+            } else {
+                document.getElementById('name').innerHTML = "please enter an integer!";
+                document.getElementById('age').innerHTML = "";
+                document.getElementById('address').innerHTML = "";
+                document.getElementById('numberOfChildren').innerHTML = "";
+            }
+        }
+
+        function isInteger(value) {
+            if ((undefined === value) || (null === value)) {
+                return false;
+            }
+        return value % 1 == 0;
+        }
+    </script>
+</head>
+<body onload="init();">
+
+<p>Welcome ${user}!</p>
+
+<p>Hit: <span id = 'hit'></span></p>
+
+<p>Miss: <span id = 'miss'></span></p>
+
+<p>Size: <span id = 'size'></span></p>
+
+<p>Max Size: <span id = 'maxSize'></span></p>
+
+<form name="message" action="">
+    <input name="usermsg" type="text" id="message" size="5"/>
+    <input type="button" name="submitmsg" value="Send..." onclick="sendMessage();"/>
+</form>
+
+<p><span id = 'name'></span></p>
+
+<p><span id = 'age'></span></p>
+
+<p><span id = 'address'></span></p>
+
+<p><span id = 'numberOfChildren'></span></p>
+
+</body>
+</html>
