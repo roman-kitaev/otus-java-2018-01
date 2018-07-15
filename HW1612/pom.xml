@@ -37,7 +37,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.otus.hw161.Main</mainClass>
+                            <mainClass>ru.otus.hw1612.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
